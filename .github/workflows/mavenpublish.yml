@@ -17,7 +17,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-	- name: Unknow0/package@master
+    - name: Unknow0/package@master
 
     - name: set version
       run: mvn -B versions:set -DnewVersion=${GITHUB_REF##*/} -s .github/settings.xml
