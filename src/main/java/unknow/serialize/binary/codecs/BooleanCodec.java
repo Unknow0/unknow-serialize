@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import unknow.serialize.Codec;
+import unknow.serialize.binary.BinaryFormat;
 import unknow.serialize.binary.IoUtils;
 
 /**
@@ -13,24 +14,8 @@ import unknow.serialize.binary.IoUtils;
  * @author unknow
  */
 public class BooleanCodec implements Codec {
-	private final int id;
-
-	/**
-	 * create new ByteCodec
-	 * 
-	 * @param id the codecId
-	 */
-	public BooleanCodec(int id) {
-		this.id = id;
-	}
-
 	@Override
-	public void write(Object o, OutputStream out) throws IOException {
-		if (o == null)
-			out.write(0);
-		if (!(o instanceof java.lang.Boolean))
-			throw new IOException("not a Boolean");
-		IoUtils.write(out, id);
+	public void write(BinaryFormat format, Object o, OutputStream out) throws IOException {
 		if ((Boolean) o)
 			out.write(1);
 		else
@@ -38,7 +23,7 @@ public class BooleanCodec implements Codec {
 	}
 
 	@Override
-	public Object read(InputStream in) throws IOException {
+	public Object read(BinaryFormat format, InputStream in) throws IOException {
 		return IoUtils.read(in) != 0;
 	}
 
@@ -48,24 +33,8 @@ public class BooleanCodec implements Codec {
 	 * @author unknow
 	 */
 	public static class Array implements Codec {
-		private final int id;
-
-		/**
-		 * create new Array
-		 * 
-		 * @param id the codecId
-		 */
-		public Array(int id) {
-			this.id = id;
-		}
-
 		@Override
-		public void write(Object o, OutputStream out) throws IOException {
-			if (o == null)
-				out.write(0);
-			if (!(o instanceof boolean[]))
-				throw new IOException("not a boolean array");
-			IoUtils.write(out, id);
+		public void write(BinaryFormat format, Object o, OutputStream out) throws IOException {
 			boolean[] a = (boolean[]) o;
 			IoUtils.write(out, a.length);
 			int i = 0;
@@ -86,7 +55,7 @@ public class BooleanCodec implements Codec {
 		}
 
 		@Override
-		public Object read(InputStream in) throws IOException {
+		public Object read(BinaryFormat format, InputStream in) throws IOException {
 			int len = IoUtils.readInt(in);
 			boolean[] a = new boolean[len];
 			int i = 0;
@@ -119,24 +88,8 @@ public class BooleanCodec implements Codec {
 	 * @author unknow
 	 */
 	public static class ArrayBoolean implements Codec {
-		private final int id;
-
-		/**
-		 * create new ArrayBoolean
-		 * 
-		 * @param id the codecId
-		 */
-		public ArrayBoolean(int id) {
-			this.id = id;
-		}
-
 		@Override
-		public void write(Object o, OutputStream out) throws IOException {
-			if (o == null)
-				out.write(0);
-			if (!(o instanceof Boolean[]))
-				throw new IOException("not a Boolean array");
-			IoUtils.write(out, id);
+		public void write(BinaryFormat format, Object o, OutputStream out) throws IOException {
 			Boolean[] a = (Boolean[]) o;
 			IoUtils.write(out, a.length);
 			int i = 0;
@@ -172,7 +125,7 @@ public class BooleanCodec implements Codec {
 		}
 
 		@Override
-		public Object read(InputStream in) throws IOException {
+		public Object read(BinaryFormat format, InputStream in) throws IOException {
 			int len = IoUtils.readInt(in);
 			Boolean[] a = new Boolean[len];
 			int i = 0;

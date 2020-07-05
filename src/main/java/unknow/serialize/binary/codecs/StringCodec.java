@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import unknow.serialize.Codec;
+import unknow.serialize.binary.BinaryFormat;
 import unknow.serialize.binary.IoUtils;
 
 /**
@@ -14,24 +15,8 @@ import unknow.serialize.binary.IoUtils;
  * @author unknow
  */
 public class StringCodec implements Codec {
-	private final int id;
-
-	/**
-	 * create new StringCodec
-	 * 
-	 * @param id the codecId
-	 */
-	public StringCodec(int id) {
-		this.id = id;
-	}
-
 	@Override
-	public void write(Object o, OutputStream out) throws IOException {
-		if (o == null)
-			out.write(0);
-		if (!(o instanceof String))
-			throw new IOException("not a String");
-		IoUtils.write(out, id);
+	public void write(BinaryFormat format, Object o, OutputStream out) throws IOException {
 		String value = (String) o;
 		int charCount = value.length();
 		if (charCount == 0) {
@@ -44,7 +29,7 @@ public class StringCodec implements Codec {
 	}
 
 	@Override
-	public Object read(InputStream in) throws IOException {
+	public Object read(BinaryFormat format, InputStream in) throws IOException {
 		int len = IoUtils.readInt(in);
 		byte[] b = new byte[len];
 		IoUtils.fill(in, b);

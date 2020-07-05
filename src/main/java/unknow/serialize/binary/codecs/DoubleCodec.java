@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import unknow.serialize.Codec;
+import unknow.serialize.binary.BinaryFormat;
 import unknow.serialize.binary.IoUtils;
 
 /**
@@ -13,29 +14,13 @@ import unknow.serialize.binary.IoUtils;
  * @author unknow
  */
 public class DoubleCodec implements Codec {
-	private final int id;
-
-	/**
-	 * create new DoubleCodec
-	 * 
-	 * @param id the codecId
-	 */
-	public DoubleCodec(int id) {
-		this.id = id;
-	}
-
 	@Override
-	public void write(Object o, OutputStream out) throws IOException {
-		if (o == null)
-			out.write(0);
-		if (!(o instanceof Double))
-			throw new IOException("not a Double");
-		IoUtils.write(out, id);
+	public void write(BinaryFormat format, Object o, OutputStream out) throws IOException {
 		IoUtils.write(out, (Double) o);
 	}
 
 	@Override
-	public Object read(InputStream in) throws IOException {
+	public Object read(BinaryFormat format, InputStream in) throws IOException {
 		return IoUtils.readDouble(in);
 	}
 
@@ -45,24 +30,8 @@ public class DoubleCodec implements Codec {
 	 * @author unknow
 	 */
 	public static class Array implements Codec {
-		private final int id;
-
-		/**
-		 * create new Array
-		 * 
-		 * @param id the codecId
-		 */
-		public Array(int id) {
-			this.id = id;
-		}
-
 		@Override
-		public void write(Object o, OutputStream out) throws IOException {
-			if (o == null)
-				out.write(0);
-			if (!(o instanceof double[]))
-				throw new IOException("not a double array");
-			IoUtils.write(out, id);
+		public void write(BinaryFormat format, Object o, OutputStream out) throws IOException {
 			double[] b = (double[]) o;
 			IoUtils.write(out, b.length);
 			for (int i = 0; i < b.length; i++)
@@ -70,7 +39,7 @@ public class DoubleCodec implements Codec {
 		}
 
 		@Override
-		public Object read(InputStream in) throws IOException {
+		public Object read(BinaryFormat format, InputStream in) throws IOException {
 			int len = IoUtils.readInt(in);
 			double[] b = new double[len];
 			for (int i = 0; i < len; i++)

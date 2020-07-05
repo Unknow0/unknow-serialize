@@ -20,6 +20,7 @@ import java.util.Random;
 import org.junit.Test;
 
 import unknow.serialize.binary.BinaryFormat;
+import unknow.serialize.binary.BinaryFormatBuilder;
 
 /**
  * @author unknow
@@ -27,9 +28,20 @@ import unknow.serialize.binary.BinaryFormat;
 public class BinaryFormatTest {
 	private static final Random rand = new Random();
 
+	@SuppressWarnings("rawtypes")
+	private static BinaryFormat format(Class... cl) throws ReflectiveOperationException {
+//		BinaryFormat.Builder b=BinaryFormat.create();
+		BinaryFormatBuilder b = new BinaryFormatBuilder();
+
+		for (int i = 0; i < cl.length; i++)
+			b.register(cl[i]);
+		return b.build();
+	}
+
 	@Test
 	public void testPrimitive() throws ReflectiveOperationException, IOException {
-		BinaryFormat binary = BinaryFormat.create().register(Primitive.class).build();
+		BinaryFormat binary = format(Primitive.class);
+
 		Primitive o = new Primitive();
 		o.bool = rand.nextBoolean();
 		o.b = (byte) rand.nextInt(256);
@@ -44,7 +56,8 @@ public class BinaryFormatTest {
 
 	@Test
 	public void testWrapper() throws ReflectiveOperationException, IOException {
-		BinaryFormat binary = BinaryFormat.create().register(Wrapper.class).register(Boolean.class).build();
+		BinaryFormat binary = format(Wrapper.class, Boolean.class);
+
 		assertReadWrite("Boolean", binary, rand.nextBoolean());
 		assertReadWrite("Byte", binary, (byte) rand.nextInt(256));
 		assertReadWrite("Character", binary, (char) rand.nextInt(65536));
@@ -68,7 +81,7 @@ public class BinaryFormatTest {
 
 	@Test
 	public void testPrimitiveArray() throws ReflectiveOperationException, IOException {
-		BinaryFormat binary = BinaryFormat.create().register(PrimitiveArray.class).build();
+		BinaryFormat binary = format(PrimitiveArray.class);
 
 		PrimitiveArray o = new PrimitiveArray();
 		o.bool = new boolean[rand.nextInt(256)];
@@ -93,7 +106,7 @@ public class BinaryFormatTest {
 
 	@Test
 	public void testArray() throws ReflectiveOperationException, IOException {
-		BinaryFormat binary = BinaryFormat.create().register(Byte[].class).build();
+		BinaryFormat binary = format(Byte[].class);
 
 		int len = rand.nextInt(256);
 		Byte[] a = new Byte[len];
@@ -104,7 +117,7 @@ public class BinaryFormatTest {
 
 	@Test
 	public void testCollection() throws ReflectiveOperationException, IOException {
-		BinaryFormat binary = BinaryFormat.create().register(ArrayList.class).register(HashSet.class).register(Byte.class).build();
+		BinaryFormat binary = format(ArrayList.class, HashSet.class, Byte.class);
 
 		Collection<Byte> list = new ArrayList<>();
 		int len = rand.nextInt(256);
@@ -121,7 +134,7 @@ public class BinaryFormatTest {
 
 	@Test
 	public void testMap() throws ReflectiveOperationException, IOException {
-		BinaryFormat binary = BinaryFormat.create().register(HashMap.class).register(Byte.class).build();
+		BinaryFormat binary = format(HashMap.class, Byte.class);
 
 		Map<Byte, Byte> list = new HashMap<>();
 		int len = rand.nextInt(256);
@@ -135,7 +148,7 @@ public class BinaryFormatTest {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void testObject() throws ReflectiveOperationException, IOException {
-		BinaryFormat binary = BinaryFormat.create().register(ArrayList.class).register(Integer.class).register(Pojo.class).build();
+		BinaryFormat binary = format(ArrayList.class, Integer.class, Pojo.class);
 
 		int len = rand.nextInt(256);
 		int[][] a = new int[len][];
