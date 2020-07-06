@@ -1,7 +1,5 @@
 package unknow.serialize.binary;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -217,11 +215,6 @@ public class BinaryFormatBuilder {
 	public BinaryFormat build() throws ReflectiveOperationException {
 		String name = "unknow/serialize/binary/codecs/$" + Integer.toString(System.identityHashCode(this), 16);
 		byte[] bytes = generateFormat(name);
-		try (FileOutputStream out = new FileOutputStream(new File("Z:/t.class"))) {
-			out.write(bytes);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		Class<BinaryFormat> cl = loader.define(name.replace('/', '.'), bytes);
 
 		return cl.newInstance();
