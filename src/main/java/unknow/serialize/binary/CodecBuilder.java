@@ -38,7 +38,7 @@ public interface CodecBuilder {
 		write.visitMethodInsn(Opcodes.INVOKESTATIC, "unknow/serialize/binary/IoUtils", "write", "(Ljava/io/OutputStream;I)V", false);
 
 		read.visitMethodInsn(Opcodes.INVOKESTATIC, clazz, "values", "()[" + Type.getDescriptor(cl), false);
-		read.visitVarInsn(Opcodes.ALOAD, 1); // in
+		read.visitVarInsn(Opcodes.ALOAD, 2); // in
 		read.visitMethodInsn(Opcodes.INVOKESTATIC, "unknow/serialize/binary/IoUtils", "readInt", "(Ljava/io/InputStream;)I", false);
 		read.visitInsn(Opcodes.AALOAD);
 	};

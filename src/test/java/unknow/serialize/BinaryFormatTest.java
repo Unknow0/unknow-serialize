@@ -105,6 +105,14 @@ public class BinaryFormatTest {
 	}
 
 	@Test
+	public void testEnum() throws ReflectiveOperationException, IOException {
+		BinaryFormat binary = format(EnumTest.class);
+
+		assertReadWrite("Enum", binary, (Object) null);
+		assertReadWrite("Enum", binary, EnumTest.V1);
+	}
+
+	@Test
 	public void testArray() throws ReflectiveOperationException, IOException {
 		BinaryFormat binary = format(Byte[].class);
 
